@@ -1,6 +1,6 @@
 from flask import redirect, render_template,session, request, url_for, flash
 from shop import app,db, photos
-from .models import Brand, Category
+from .models import Brand, Category, Addproduct
 from .forms import Addproducts
 import secrets
 
@@ -34,24 +34,23 @@ def addcat():
 
 @app.route('/addproduct', methods=['GET','POST'])
 def addproduct():
-    form = Addproducts(request.form)
     brands = Brand.query.all()
     categories = Category.query.all()
+    form = Addproducts(request.form)
     if request.method=="POST":
-        # name = form.name.data
-        # price = form.price.data
-        # discount = form.discount.data
-        # stock = form.stock.data
-        # colors = form.colors.data
-        # desc = form.discription.data
-        # brand = request.form.get('brand')
-        # category = request.form.get('category')
-        photos.save(request.files.get('image_1'), name=secrets.token_hex(10) + ".")
-        photos.save(request.files.get('image_2'), name=secrets.token_hex(10) + ".")
-        photos.save(request.files.get('image_3'), name=secrets.token_hex(10) + ".")
-    #     addproduct = Addproduct(name=name,price=price,discount=discount,stock=stock,colors=colors,desc=desc,category_id=category,brand_id=brand,image_1=image_1,image_2=image_2,image_3=image_3)
-    #     db.session.add(addproduct)
-    #     flash(f'The product {name} was added in database','success')
-    #     db.session.commit()
-    #     return redirect(url_for('admin'))
+        name = form.name.data
+        price = form.price.data
+        discount = form.discount.data
+        stock = form.stock.data
+        colors = form.colors.data
+        desc = form.discription.data
+        brand = request.form.get('brand')
+        category = request.form.get('category')
+        image_1 = photos.save(request.files.get('image_1'), name=secrets.token_hex(10) + ".")
+        image_2 = photos.save(request.files.get('image_2'), name=secrets.token_hex(10) + ".")
+        image_3 = photos.save(request.files.get('image_3'), name=secrets.token_hex(10) + ".")
+        addproduct = Addproduct(name=name,price=price,discount=discount,stock=stock,colors=colors,desc=desc,category_id=category,brand_id=brand,image_1=image_1,image_2=image_2,image_3=image_3)
+        db.session.add(addproduct)
+        flash(f'The product {name} was added in database','success')
+        db.session.commit()
     return render_template('products/addproduct.html', title='Add a Product', form = form, brands=brands, categories=categories)
