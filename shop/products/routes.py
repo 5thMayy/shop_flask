@@ -4,6 +4,13 @@ from .models import Brand, Category, Addproduct
 from .forms import Addproducts
 import secrets
 
+
+
+@app.route('/')
+def home():
+    return "  "
+
+
 @app.route('/addbrand',methods=['GET','POST'])
 def addbrand():
     if request.method=="POST":
@@ -17,7 +24,20 @@ def addbrand():
     return render_template('products/addbrand.html', brands='brands')
 
 
-
+@app.route('/updatebrand/<int:id>',methods=['GET','POST'])
+def updatebrand(id):
+    if 'email' not in session:
+        flash('Login first please','danger')
+        return redirect(url_for('login'))
+    updatebrand = Brand.query.get_or_404(id)
+    brand = request.form.get('brand')
+    if request.method =="POST":
+        updatebrand.name = brand
+        flash(f'The brand {updatebrand.name} was changed to {brand}','success')
+        db.session.commit()
+        return redirect(url_for('brands'))
+    brand = updatebrand.name
+    return render_template('products/addbrand.html', title='Udate brand',brands='brands',updatebrand=updatebrand)
 
 
 @app.route('/addcat',methods=['GET','POST'])
@@ -31,6 +51,21 @@ def addcat():
         return redirect(url_for('addcat'))
 
     return render_template('products/addbrand.html')
+
+@app.route('/updatecat/<int:id>',methods=['GET','POST'])
+def updatecat(id):
+    if 'email' not in session:
+        flash('Login first please','danger')
+        return redirect(url_for('login'))
+    updatecat = Category.query.get_or_404(id)
+    category = request.form.get('category')  
+    if request.method =="POST":
+        updatecat.name = category
+        flash(f'The category {updatecat.name} was changed to {category}','success')
+        db.session.commit()
+        return redirect(url_for('categories'))
+    category = updatecat.name
+    return render_template('products/addbrand.html', title='Update cat',updatecat=updatecat)
 
 @app.route('/addproduct', methods=['GET','POST'])
 def addproduct():

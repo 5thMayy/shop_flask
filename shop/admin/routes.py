@@ -9,7 +9,7 @@ from shop.products.models import Addproduct, Brand, Category
 import os
 
 
-
+@app.route('/')
 @app.route('/admin')
 def admin():
     if 'email' not in session:
@@ -25,6 +25,14 @@ def brands():
         return redirect(url_for('login'))
     brands = Brand.query.order_by(Brand.id.desc()).all()
     return render_template('admin/brand.html', title='brands',brands=brands)
+
+@app.route('/categories')
+def categories():
+    if 'email' not in session:
+        flash('Please login first', 'danger')
+        return redirect(url_for('login'))
+    categories = Category.query.order_by(Category.id.desc()).all()
+    return render_template('admin/brand.html', title='categories',categories=categories)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
