@@ -1,14 +1,30 @@
+from itertools import product
 from turtle import title
 from flask import render_template, session, request, redirect, url_for, flash
 
 from shop import app, db, bcrypt
 from .forms import RegistrationForm, LoginForm
 from .models import User
+from shop.products.models import Addproduct, Brand, Category
 import os
-@app.route('/')
-def home():
-    return render_template('admin/index.html', title="Admin Page")
 
+
+
+@app.route('/admin')
+def admin():
+    if 'email' not in session:
+        flash('Please login first', 'danger')
+        return redirect(url_for('login'))
+    products = Addproduct.query.all()
+    return render_template('admin/index.html', title="Admin Page", products=products)
+
+@app.route('/brands')
+def brands():
+    if 'email' not in session:
+        flash('Please login first', 'danger')
+        return redirect(url_for('login'))
+    brands = Brand.query.order_by(Brand.id.desc()).all()
+    return render_template('admin/brand.html', title='brands',brands=brands)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
