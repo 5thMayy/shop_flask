@@ -37,7 +37,7 @@ def updatebrand(id):
         db.session.commit()
         return redirect(url_for('brands'))
     brand = updatebrand.name
-    return render_template('products/addbrand.html', title='Udate brand',brands='brands',updatebrand=updatebrand)
+    return render_template('products/updatebrand.html', title='Udate brand',brands='brands',updatebrand=updatebrand)
 
 
 @app.route('/addcat',methods=['GET','POST'])
@@ -65,7 +65,7 @@ def updatecat(id):
         db.session.commit()
         return redirect(url_for('categories'))
     category = updatecat.name
-    return render_template('products/addbrand.html', title='Update cat',updatecat=updatecat)
+    return render_template('products/updatebrand.html', title='Update cat',updatecat=updatecat)
 
 @app.route('/addproduct', methods=['GET','POST'])
 def addproduct():
@@ -89,3 +89,53 @@ def addproduct():
         flash(f'The product {name} was added in database','success')
         db.session.commit()
     return render_template('products/addproduct.html', title='Add a Product', form = form, brands=brands, categories=categories)
+
+
+@app.route('/updateproduct/<int:id>', methods=['GET','POST'])
+def updateproduct(id):
+    form = Addproducts(request.form)
+    product = Addproduct.query.get_or_404(id)
+    brands = Brand.query.all()
+    categories = Category.query.all()
+    brand = request.form.get('brand')
+    category = request.form.get('category')
+    if request.method =="POST":
+        product.name = form.name.data 
+        product.price = form.price.data
+        product.discount = form.discount.data
+        product.stock = form.stock.data 
+        product.colors = form.colors.data
+        product.desc = form.discription.data
+        product.category_id = category
+        product.brand_id = brand
+    #     if request.files.get('image_1'):
+    #         try:
+    #             os.unlink(os.path.join(current_app.root_path, "static/images/" + product.image_1))
+    #             product.image_1 = photos.save(request.files.get('image_1'), name=secrets.token_hex(10) + ".")
+    #         except:
+    #             product.image_1 = photos.save(request.files.get('image_1'), name=secrets.token_hex(10) + ".")
+    #     if request.files.get('image_2'):
+    #         try:
+    #             os.unlink(os.path.join(current_app.root_path, "static/images/" + product.image_2))
+    #             product.image_2 = photos.save(request.files.get('image_2'), name=secrets.token_hex(10) + ".")
+    #         except:
+    #             product.image_2 = photos.save(request.files.get('image_2'), name=secrets.token_hex(10) + ".")
+    #     if request.files.get('image_3'):
+    #         try:
+    #             os.unlink(os.path.join(current_app.root_path, "static/images/" + product.image_3))
+    #             product.image_3 = photos.save(request.files.get('image_3'), name=secrets.token_hex(10) + ".")
+    #         except:
+    #             product.image_3 = photos.save(request.files.get('image_3'), name=secrets.token_hex(10) + ".")
+
+        flash('The product was updated','success')
+        db.session.commit()
+        return redirect(url_for('admin'))
+    form.name.data = product.name
+    form.price.data = product.price
+    form.discount.data = product.discount
+    form.stock.data = product.stock
+    form.colors.data = product.colors
+    form.discription.data = product.desc
+    brand = product.brand.name
+    category = product.category.name
+    return render_template('products/updateproduct.html', form=form, brands=brands, categories=categories, product=product)

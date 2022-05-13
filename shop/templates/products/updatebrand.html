@@ -16,10 +16,11 @@
             </form>
             <a href="{{url_for('brands')}}" class="btn btn-warning">Cancel</a>
             {% else %}
-            <h1 class="text-center mt-5">Add category</h1>
+            <h1 class="text-center mt-5">Update Category</h1>
             <form action="" method="POST">
-                <input type="text" name="category" class="form-control" value="{{updatecat.name}} >
+                <input type="text" name="category" class="form-control" value="{{updatecat.name}}">
                 <input type="submit" value="Update category" class="btn btn-info mt-2"> 
+                <a href="{{url_for('categories')}}" class="btn btn-warning">Cancel</a>
             </form>
             {% endif %}
         </div>
