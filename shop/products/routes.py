@@ -4,12 +4,10 @@ from .models import Brand, Category, Addproduct
 from .forms import Addproducts
 import secrets, os
 
-
-
-@app.route('/')
+@app.route('/home')
 def home():
-    return "  "
-
+    products = Addproduct.query.filter(Addproduct.stock > 0)
+    return render_template('products/index.html', products = products)
 
 @app.route('/addbrand',methods=['GET','POST'])
 def addbrand():
