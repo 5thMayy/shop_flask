@@ -44,8 +44,8 @@ def deletebrand(id):
     brand = Brand.query.get_or_404(id)
     if request.method=="POST":
         db.session.delete(brand)
-        flash(f"The brand {brand.name} was deleted from your database","success")
         db.session.commit()
+        flash(f"The brand {brand.name} was deleted from your database","success")
         return redirect(url_for('admin'))
     flash(f"The brand {brand.name} can't be  deleted from your database","warning")
     return redirect(url_for('admin'))
@@ -76,6 +76,18 @@ def updatecat(id):
         return redirect(url_for('categories'))
     category = updatecat.name
     return render_template('products/updatebrand.html', title='Update cat',updatecat=updatecat)
+
+@app.route('/deletecat/<int:id>', methods=['GET','POST'])
+def deletecat(id):
+    category = Category.query.get_or_404(id)
+    if request.method=="POST":
+        db.session.delete(category)
+        flash(f"The brand {category.name} was deleted from your database","success")
+        db.session.commit()
+        return redirect(url_for('admin'))
+    flash(f"The brand {category.name} can't be  deleted from your database","warning")
+    return redirect(url_for('admin'))
+
 
 @app.route('/addproduct', methods=['GET','POST'])
 def addproduct():
